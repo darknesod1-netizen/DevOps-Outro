@@ -1,12 +1,12 @@
-\# Lab 2 submission
+# Lab 2 submission
 
 
 
-\## Task 1.
+## Task 1.
 
 
 
-\### HEAD
+### HEAD
 
 
 
@@ -46,7 +46,7 @@ Signed-off-by: darknesod <darknesod1@gmail.com>
 
 
 
-\### tree
+### tree
 
 
 
@@ -70,7 +70,7 @@ $ git cat-file -p cc6bbbe8afd190b513ffd92f400906558a872fec
 
 
 
-\### blob
+### blob
 
 ```
 
@@ -208,7 +208,7 @@ Thumbs.db
 
 
 
-\### inside .git/
+### inside .git/
 
 
 
@@ -302,7 +302,7 @@ $ find .git/objects -type f | wc -l # Total number of stored Git objects in the 
 
 
 
-\### disaster + recover
+### disaster + recover
 
 
 
@@ -362,31 +362,81 @@ If git gc had run between the bad --hard reset and the recovery, Git might have 
 
 
 
-\## Task 2.
+## Task 2.
 
 
-
-Before:
-
-```
+### Tag verification
 
 ```
+$ git tag -v v0.1.0-lab2-darknesod
+object c7bb13418e6ad7bd7655d913d70b6e2a3cb438e5
+type commit
+tag v0.1.0-lab2-darknesod
+tagger darknesod <darknesod1@gmail.com> 1781020928 +0300
 
-
-
-After:
-
+Lab 2 milestone — version control deep dive
+Good "git" signature with ED25519 key SHA256:KTIlBmBdoxVYD31wa9exPhLOUXTzl+xYbxxIi8xDwkU
+C:/Users/ddost/.config/git/allowed_signers:1: bad options: unknown key option
+No principal matched.
 ```
 
 
+### Before tag:
+
+```
+$ git log --oneline --graph --decorate -5
+* 1772d01 (HEAD) docs: update PR template
+* d10cb56 docs: add PR template
+* 66bbd4d (upstream/main, upstream/HEAD) docs(lab1): align Task 3 GitHub Community engagement with other courses
+*   170000c Merge pull request #907 from inno-devops-labs/s26-refactor
+|\
+| * d50436c (upstream/s26-refactor) fix(lab12,gitignore): Spin SDK (WAGI removed in Spin 3.x); minimal student-safe gitignore
+```
+
+### After tag:
+
+```
+git log --oneline --graph --decorate -5
+* c7bb134 (HEAD -> main, tag: v0.1.0-lab2-darknesod, origin/main, origin/HEAD) docs: upstream moved while you worked
+* 1772d01 docs: update PR template
+* d10cb56 docs: add PR template
+* 66bbd4d (upstream/main, upstream/HEAD) docs(lab1): align Task 3 GitHub Community engagement with other courses
+*   170000c Merge pull request #907 from inno-devops-labs/s26-refactor
+|\
+```
+
+### Tag Description
+
+```
+$ git show v0.1.0-lab2-darknesod
+tag v0.1.0-lab2-darknesod
+Tagger: darknesod <darknesod1@gmail.com>
+Date:   Tue Jun 9 19:02:08 2026 +0300
+
+Lab 2 milestone — version control deep dive
+-----BEGIN SSH SIGNATURE-----
+U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgGwo9P6Qa2noWzMMeAY0YqvaWMZ
+eQ8TynK6jc/3lTKH8AAAADZ2l0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5
+AAAAQF/4UCfP0wgwrTqZuF9uppYk4axQT7x3j7uHWsJS7Gbn9B3dhk3GLCoWpm83tQGkVl
+DFYiC3+IB/As1sDsL43go=
+-----END SSH SIGNATURE-----
+
+commit c7bb13418e6ad7bd7655d913d70b6e2a3cb438e5 (HEAD -> main, tag: v0.1.0-lab2-darknesod, origin/main, origin/HEAD)
+Author: darknesod <darknesod1@gmail.com>
+Date:   Tue Jun 9 17:40:19 2026 +0300
+
+    docs: upstream moved while you worked
+
+    Signed-off-by: darknesod <darknesod1@gmail.com>
 ```
 
 
-\## Bonus task.
+
+## Bonus task.
 
 
 
-\### B.3
+### B.3
 
 
 
@@ -436,4 +486,4 @@ Switched to branch 'bisect'
 Your branch is up to date with 'upstream/bug/bisect-me'.
 ```
 
-Bisect works like a binary search algorithm on the commit history. It starts with a known good commit and a known bad commit, then repeatedly checks the commit in the middle of that range. After each check, Git decides whether that commit is good or bad and narrows the search space accordingly. Because it halves the number of possible commits at each step, it finds the faulty commit in about O(log₂(N)) steps, where N is the number of commits in the range.
+Git bisect works like a binary search over commit history. It starts with one known good commit and one known bad commit, then repeatedly selects the midpoint commit between them for testing. After each step, Git marks the commit as good or bad and reduces the search range by half. Because the search space is halved at every iteration, the algorithm finds the faulty commit in logarithmic time, approximately O(log₂(N)), where N is the number of commits in the range.
